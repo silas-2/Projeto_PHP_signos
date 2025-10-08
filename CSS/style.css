@@ -1,0 +1,16 @@
+/* Deixa o fundo de toda a página com um cinza bem claro */
+body {
+    background-color: #faf8f9;
+}
+
+/* Deixa o título principal com um azul mais escuro e mais forte */
+h1 {
+    color: #2c3e50;
+    font-weight: bold;
+}
+
+/* Personaliza o card principal com uma sombra mais suave */
+.card {
+    border: none; /* Remove a borda padrão */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Aplica uma sombra mais elegante */
+}
