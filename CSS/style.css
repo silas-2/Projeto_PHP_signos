@@ -1,16 +1,37 @@
-/* Deixa o fundo de toda a página com um cinza bem claro */
+/* === Estrutura === */
 body {
     background-color: #faf8f9;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
 }
 
-/* Deixa o título principal com um azul mais escuro e mais forte */
+/* === Tipografia === */
 h1 {
     color: #2c3e50;
     font-weight: bold;
+    font-size: 2rem;
+    text-align: center;
 }
 
-/* Personaliza o card principal com uma sombra mais suave */
+/* === Componentes === */
 .card {
-    border: none; /* Remove a borda padrão */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Aplica uma sombra mais elegante */
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+    background-color: #fff;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 600px;
+}
+
+/* === Imagens SVG dos signos === */
+.signo-img {
+    width: 70px;
+    height: 70px;
+    margin: 10px;
+    transition: transform 0.3s ease;
+}
+.signo-img:hover {
+    transform: scale(1.1);
 }

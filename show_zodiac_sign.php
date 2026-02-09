@@ -1,94 +1,75 @@
 <?php
-// Inclui o cabeçalho
-include('layouts/header.php');
+$data = $_POST['data_nascimento'] ?? null;
+
+function descobrirSigno($data) {
+    $dia = (int)date('d', strtotime($data));
+    $mes = (int)date('m', strtotime($data));
+
+    $signos = [
+        ['nome' => 'aquario',     'inicio' => [1, 20],  'fim' => [2, 18]],
+        ['nome' => 'peixes',      'inicio' => [2, 19],  'fim' => [3, 20]],
+        ['nome' => 'aries',       'inicio' => [3, 21],  'fim' => [4, 19]],
+        ['nome' => 'touro',       'inicio' => [4, 20],  'fim' => [5, 20]],
+        ['nome' => 'gemeos',      'inicio' => [5, 21],  'fim' => [6, 20]],
+        ['nome' => 'cancer',      'inicio' => [6, 21],  'fim' => [7, 22]],
+        ['nome' => 'leao',        'inicio' => [7, 23],  'fim' => [8, 22]],
+        ['nome' => 'virgem',      'inicio' => [8, 23],  'fim' => [9, 22]],
+        ['nome' => 'libra',       'inicio' => [9, 23],  'fim' => [10, 22]],
+        ['nome' => 'escorpiao',   'inicio' => [10, 23], 'fim' => [11, 21]],
+        ['nome' => 'sagitario',   'inicio' => [11, 22], 'fim' => [12, 21]],
+        ['nome' => 'capricornio', 'inicio' => [12, 22], 'fim' => [1, 19]],
+    ];
+
+    foreach ($signos as $signo) {
+        [$mesInicio, $diaInicio] = $signo['inicio'];
+        [$mesFim, $diaFim] = $signo['fim'];
+
+        if (
+            ($mes == $mesInicio && $dia >= $diaInicio) ||
+            ($mes == $mesFim && $dia <= $diaFim)
+        ) {
+            return $signo['nome'];
+        }
+    }
+
+    return 'desconhecido';
+}
+
+$signo = descobrirSigno($data);
 ?>
 
-<main class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-7">
-
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Seu Signo</title>
+    <link rel="stylesheet" href="CSS/style.css">
+</head>
+<body>
+    <main class="container text-center mt-5">
+        <h1>Seu signo é: <span style="text-transform: capitalize;"><?php echo $signo; ?></span></h1>
+        <img src="CSS/imgs/svg/<?php echo $signo; ?>.svg" alt="<?php echo $signo; ?>" class="signo-img mt-3">
+        <p class="mt-4 text-muted">
             <?php
-            // 1. VERIFICAÇÃO INICIAL
-            // Checa se a data de nascimento foi realmente enviada pelo formulário
-            if (isset($_POST['data_nascimento']) && !empty($_POST['data_nascimento'])) {
-                
-                // 2. RECEBIMENTO E PREPARAÇÃO DOS DADOS
-                $data_nascimento_str = $_POST['data_nascimento']; // Ex: "1990-07-25"
-                $signos_xml = simplexml_load_file("signos.xml");
+            $descricao = [
+                'aries' => 'Áries é impulsivo, corajoso e cheio de energia.',
+                'touro' => 'Touro é estável, confiável e aprecia conforto.',
+                'gemeos' => 'Gêmeos é comunicativo, curioso e versátil.',
+                'cancer' => 'Câncer é sensível, protetor e emocional.',
+                'leao' => 'Leão é confiante, generoso e adora brilhar.',
+                'virgem' => 'Virgem é detalhista, prático e organizado.',
+                'libra' => 'Libra é diplomático, sociável e busca equilíbrio.',
+                'escorpiao' => 'Escorpião é intenso, misterioso e apaixonado.',
+                'sagitario' => 'Sagitário é aventureiro, otimista e filosófico.',
+                'capricornio' => 'Capricórnio é disciplinado, ambicioso e responsável.',
+                'aquario' => 'Aquário é inovador, independente e visionário.',
+                'peixes' => 'Peixes é sonhador, empático e artístico.',
+            ];
 
-                // 3. CONVERSÃO DA DATA DO USUÁRIO
-                // Transforma a data de nascimento em um número fácil de comparar (MêsDia)
-                // Ex: 25/07 vira 725. 10/11 vira 1110.
-                $data_obj = new DateTime($data_nascimento_str);
-                $dia_nasc = (int)$data_obj->format('d');
-                $mes_nasc = (int)$data_obj->format('m');
-                $data_nasc_num = ($mes_nasc * 100) + $dia_nasc;
-
-                $signo_encontrado = null; // Variável para guardar o signo quando o encontrarmos
-
-                // 4. LÓGICA PRINCIPAL: ITERAÇÃO E COMPARAÇÃO
-                // Loop que passa por cada <signo> dentro do nosso XML
-                foreach ($signos_xml->signo as $signo) {
-                    
-                    // Converte as datas de início e fim do XML para o mesmo formato numérico
-                    list($dia_inicio, $mes_inicio) = explode('/', (string)$signo->dataInicio);
-                    list($dia_fim, $mes_fim) = explode('/', (string)$signo->dataFim);
-
-                    $data_inicio_num = ((int)$mes_inicio * 100) + (int)$dia_inicio;
-                    $data_fim_num = ((int)$mes_fim * 100) + (int)$dia_fim;
-
-                    // 5. A COMPARAÇÃO MÁGICA
-                    
-                    // Caso especial para Capricórnio (e outros que cruzam o ano, se houvesse)
-                    // Onde a data de início (1222) é MAIOR que a data de fim (120)
-                    if ($data_inicio_num > $data_fim_num) {
-                        if ($data_nasc_num >= $data_inicio_num || $data_nasc_num <= $data_fim_num) {
-                            $signo_encontrado = $signo;
-                            break; // Encontrou o signo, para o loop!
-                        }
-                    } 
-                    // Para todos os outros signos (onde início < fim)
-                    else {
-                        if ($data_nasc_num >= $data_inicio_num && $data_nasc_num <= $data_fim_num) {
-                            $signo_encontrado = $signo;
-                            break; // Encontrou o signo, para o loop!
-                        }
-                    }
-                }
-
-                // 6. EXIBIÇÃO DO RESULTADO
-                if ($signo_encontrado) {
-                    echo "<div class='card shadow-lg card-signo border-0' style='border-radius: 1rem;'>";
-                    echo "<div class='card-header card-header-signo text-center p-3 bg-dark text-white'>";
-                    echo "<h2 class='h4 mb-0'>Seu signo é " . htmlspecialchars($signo_encontrado->signoNome) . "!</h2>";
-                    echo "</div>";
-                    echo "<div class='card-body p-4'>";
-                    echo "<h5 class='card-title text-muted'>Período: " . htmlspecialchars($signo_encontrado->dataInicio) . " a " . htmlspecialchars($signo_encontrado->dataFim) . "</h5>";
-                    echo "<p class='card-text mt-3 fs-5'>" . htmlspecialchars($signo_encontrado->descricao) . "</p>";
-                    echo "</div>";
-                    echo "</div>";
-                } else {
-                    echo "<div class='alert alert-danger'>Não foi possível determinar o seu signo. Tente novamente.</div>";
-                }
-
-            } else {
-                // Se alguém tentar acessar a página diretamente sem enviar o formulário
-                echo "<div class='alert alert-warning'>Por favor, retorne à página inicial e insira uma data de nascimento.</div>";
-            }
+            echo $descricao[$signo] ?? 'Signo não identificado.';
             ?>
-
-            <div class="text-center mt-4">
-                <a href="index.php" class="btn btn-secondary">← Voltar e consultar outra data</a>
-            </div>
-        </div>
-    </div>
-</main>
-
-<footer class="text-center mt-auto py-3 text-muted">
-     <p>&copy; <span id="currentYear"> - Atividade Prática</p>
-</footer>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-
+        </p>
+        <a href="index.php" class="btn btn-secondary mt-4">Consultar outro signo</a>
+    </main>
 </body>
 </html>
