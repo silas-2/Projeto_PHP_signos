@@ -1,0 +1,43 @@
+/* Estilo Geral (Para Celular e Desktop) */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4; /* Cor de fundo cinza claro */
+    text-align: center;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 10px 0;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline; /* Links um ao lado do outro */
+    margin: 0 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+/* --- AQUI COMEÇA A RESPONSIVIDADE (MEDIA QUERY) --- */
+/* Quando a tela for MENOR que 600px (Celulares), muda o estilo */
+@media (max-width: 600px) {
+    body {
+        background-color: lightblue; /* Fundo fica azul no celular! */
+    }
+
+    nav ul li {
+        display: block; /* Links ficam um embaixo do outro no celular */
+        margin: 10px 0;
+    }
+}
