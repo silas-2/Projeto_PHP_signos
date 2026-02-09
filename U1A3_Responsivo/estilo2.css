@@ -1,0 +1,53 @@
+/* --- ESTILO GERAL DA VERSÃO 2 --- */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+    text-align: center;
+}
+
+header {
+    background-color: #2c3e50; /* Azul Escuro */
+    padding: 15px 0;
+}
+
+/* FLEXBOX: Organiza o menu lado a lado */
+nav ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;           /* Ativa o Flexbox */
+    justify-content: center; /* Centraliza */
+    gap: 20px;               /* Espaço entre os itens */
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+nav a:hover {
+    background-color: #1abc9c; /* Verde água ao passar o mouse */
+}
+
+/* --- RESPONSIVIDADE (Celular) --- */
+@media (max-width: 600px) {
+    nav ul {
+        flex-direction: column; /* Muda para coluna vertical */
+    }
+    
+    nav a {
+        display: block;
+        border-bottom: 1px solid #34495e;
+    }
+    
+    body {
+        background-color: #e8f8f5; /* Fundo esverdeado no celular */
+    }
+}
